@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { MouseEvent } from 'react';
 import { Phone, Copy, Check, Headphones } from 'lucide-react';
 import { TelegramIcon, WhatsAppIcon, BaleIcon, RubikaIcon } from './SocialIcons';
 import { PHONE_NUMBER_DISPLAY, PHONE_NUMBER_RAW, PHONE_TEL_URI, CONTACT_CHANNELS } from '@/lib/contact';
@@ -8,13 +9,32 @@ import { PHONE_NUMBER_DISPLAY, PHONE_NUMBER_RAW, PHONE_TEL_URI, CONTACT_CHANNELS
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
 
-  const handleCopyPhone = (e: React.MouseEvent) => {
+  const handleCopyPhone = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigator.clipboard.writeText(PHONE_NUMBER_RAW).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
+    const copyPhone = async () => {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(PHONE_NUMBER_RAW);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = PHONE_NUMBER_RAW;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2500);
+      } catch {
+        setCopied(false);
+      }
+    };
+
+    void copyPhone();
 
     // Notify backend
     fetch('/api/contact', {
@@ -86,7 +106,7 @@ export function ContactSection() {
             <div className="relative flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-5">
               <div className="flex items-center gap-2.5 sm:gap-3.5 w-full sm:w-auto">
                 <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 shadow-inner">
-                  <Phone className="size-4.5 sm:size-6" />
+                  <Phone className="size-[18px] sm:size-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">

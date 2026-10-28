@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import type { MouseEvent } from 'react';
 import { BrandLogo } from './BrandLogo';
 import { MessageSquareText } from 'lucide-react';
 
 export function Header() {
-  const scrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const scrollToContact = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const target = document.getElementById('contact-methods');
     if (target) {

@@ -7,11 +7,26 @@ import { BUSINESS_HOURS, ADDRESS_INFO } from '@/lib/contact';
 export function LocationAndHours() {
   const [copiedAddress, setCopiedAddress] = useState(false);
 
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText(ADDRESS_INFO.fullAddress).then(() => {
+  const handleCopyAddress = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(ADDRESS_INFO.fullAddress);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = ADDRESS_INFO.fullAddress;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
       setCopiedAddress(true);
-      setTimeout(() => setCopiedAddress(false), 2500);
-    });
+      window.setTimeout(() => setCopiedAddress(false), 2500);
+    } catch {
+      setCopiedAddress(false);
+    }
   };
 
   return (
