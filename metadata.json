@@ -1,0 +1,6 @@
+{
+  "name": "کرمان تجربه",
+  "description": "درگاه رسمی راه‌های ارتباطی، نشانی، ساعات کاری و نقشه کرمان تجربه",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
